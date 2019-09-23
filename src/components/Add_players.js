@@ -1,5 +1,5 @@
 import React from "react";
-
+import {Link} from "react-router-dom";
 export default class Add_players extends React.Component
 {
     constructor(props)
@@ -43,28 +43,30 @@ export default class Add_players extends React.Component
                  .then(response =>
                     {
                         this.setState({
-                            alldata:[...this.state.alldata,response.data.data]
+                            alldata:[...this.state.alldata,response.data]
                         }) 
                         console.log(this.state.alldata)
                     } )
-                 .catch(err => console.log(err));
-
-
-        
+                 .catch(err => console.log(err));       
         
     }
     componentDidMount()
     {
         const axios = require('axios'); 
         axios.get('http://localhost:5000/show')
-        .then(response =>
+        .then(response =>{
+            
             this.setState({
-            alldata:[...this.state.alldata,...response.data.data]
-        }))
+            alldata:[...this.state.alldata,...response.data]            
+        })
+        console.log(this.state.alldata[1]._id.$oid)
+    })
         .catch(err => console.log(err));
     }
+    
     render()
     {
+       
         return(
             <React.Fragment>
                 <div className="container">
@@ -85,6 +87,8 @@ export default class Add_players extends React.Component
                                     <th scope="col">Name</th>
                                     <th scope="col">Country</th>
                                     <th scope="col">Age</th>
+                                    <th scope="col">Update</th>
+                                    <th scope="col">Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,9 +97,11 @@ export default class Add_players extends React.Component
                                         return(
                                         <tr key={index}>
                                             <th scope="row">{index+1}</th>
-                                            <td>{ele[0]}</td>
-                                            <td>{ele[1]}</td>
-                                            <td>{ele[2]}</td>
+                                            <td>{ele.name}</td>
+                                            <td>{ele.country}</td>
+                                            <td>{ele.age}</td>
+                                            <td><Link to="/add/update" >Edit </Link></td>
+                                            <td ><Link to={`/add/delete/${ele._id.$oid}`} ><button  /> </Link></td>                                            
                                         </tr>
                                         );                                        
                                     })

@@ -1,31 +1,28 @@
 from flask import Flask
 from flask import request
 import json
-app=Flask(__name__)
+from flask_pymongo import PyMongo
+from bson.objectid import ObjectId
+from bson.json_util import dumps
+app = Flask(__name__)
+app.config["MONGO_URI"] = "mongodb://localhost:27017/sports"
+mongo = PyMongo(app)
 
 @app.route("/add", methods=["POST"])
 def add_player():
-    name=request.json["name"]
-    country=request.json["country"]
-    age=request.json["age"]
-    alldata2=[]
-    fl=open("add_player.txt","a")
-    fl.writelines(name + " " + country + " "+ age +"\n")
-    alldata2.append(name)
-    alldata2.append(country)
-    alldata2.append(age)    
-    fl.close()
+    info={}
+    info["_id"] = ObjectId()
+    info["name"]=request.json["name"]
+    info["country"]=request.json["country"]
+    info["age"]=request.json["age"]
     
-    return json.dumps({"data":alldata2})
+    mongo.db.add.insert(info)
+    return dumps(info)
 
 @app.route("/show")
 def display_allPlayer():
-    alldata=[]
-    fl=open("add_player.txt")
-    for x in fl:
-        alldata.append(x.split())
-    fl.close()
-    return json.dumps({"data":alldata})
+    users = mongo.db.add.find()
+    return dumps(users)
 
 @app.route("/players", methods=["POST"])
 def play():
@@ -42,24 +39,18 @@ def play():
          win=opt2
     else:
         win="Tie"
-    alldata2=[]
-    fl=open("all_play.txt","a")
-    fl.writelines(opt1 + " " + opt2 + " "+ court + " "+turn + " " + p1score + " "+ p2score +" "+ win +"\n")
-    alldata2.append(opt1)
-    alldata2.append(opt2)
-    alldata2.append(court)    
-    alldata2.append(turn)
-    alldata2.append(p1score)
-    alldata2.append(p2score)
-    alldata2.append(win)   
-    fl.close()    
-    return json.dumps({"data":alldata2})
+    
+    mongo.db.players.insert({"player1":opt1,"player2":opt2,"court":court,"turn":turn,"p1score":p1score,"p2score":p2score,"win":win})  
+    return json.dumps({"player1":opt1,"player2":opt2,"court":court,"turn":turn,"p1score":p1score,"p2score":p2score,"win":win})
+
+
 
 @app.route("/played")
 def display_played():
-    alldata=[]
-    fl=open("all_play.txt")
-    for x in fl:
-        alldata.append(x.split())
-    fl.close()
-    return json.dumps({"data":alldata})
+    users = mongo.db.players.find()
+    return dumps(users)
+
+@app.route('/add/delete/<ObjectId:user_id>')
+def user_delete(user_id):
+    mongo.db.add.remove({'_id': ObjectId( user_id)})
+    return dumps({"message": "User Deleted"})

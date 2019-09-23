@@ -6,6 +6,23 @@ import Add_play from "./Add_play";
 import View from "./View";
 import Rank from "./Rank";
 import Stats from "./Stats";
+import User_delete from "./User_delete";
+const Del = (props) =>{
+  const axios = require('axios'); 
+        const requestParam = {
+        method: 'get',
+        url: `http://localhost:5000/add/delete/${props.name.match.params.id}`,
+
+    }
+    axios(requestParam)
+          .then(response =>
+            {
+                console.log(response)
+            } )
+          .catch(err => console.log(err));       
+  console.log(typeof(props.name.match.params.id))
+  return null
+}
 export default class App extends React.Component
 {
   constructor(props)
@@ -21,6 +38,7 @@ export default class App extends React.Component
       search_input:e.target.value
     })
   }
+  
   render()
   {
     console.log(this.state.search_input)
@@ -31,8 +49,6 @@ export default class App extends React.Component
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
-            
-
             <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
               <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li className="nav-item active">
@@ -55,6 +71,7 @@ export default class App extends React.Component
         </div>
         <Route path="/search" component={Search} />
         <Route path="/add" component={Add_players} />
+        <Route path="/add/delete/:id" render={(props)=>{return(<Del name={props} />)}} />
         <Route path="/players" component={Add_play} />
         <Route exact path="/home/view" component={View} />
         <Route path="/ranking" component={Rank} />

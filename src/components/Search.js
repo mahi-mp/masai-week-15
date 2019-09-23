@@ -17,14 +17,14 @@ export default class Search extends React.Component
         axios.get('http://localhost:5000/played')
         .then(response =>
             this.setState({
-            alldata:[...this.state.alldata,...response.data.data]
+            alldata:[...this.state.alldata,...response.data]
         }))
         .catch(err => console.log(err));
 
         axios.get('http://localhost:5000/show')
         .then(response =>
             this.setState({
-            alldata2:[...this.state.alldata2,...response.data.data]
+            alldata2:[...this.state.alldata2,...response.data]
         }))
         .catch(err => console.log(err));
     }
@@ -54,27 +54,28 @@ export default class Search extends React.Component
                         
                             {this.state.alldata2.map((ele,index)=>
                             { 
-                                if(ele[0]==this.props.location.state.data )
+                                if(ele.name==this.props.location.state.data )
                                 {
                                     return(
                                         <tbody key={index}>
                                         {this.state.alldata.map((ele2,index2)=>
                                             {
-                                                if(ele2[0]==this.props.location.state.data || ele2[1]==this.props.location.state.data )
+                                                if(ele2.player1==this.props.location.state.data || ele2.player2==this.props.location.state.data )
                                                 {
                                                     return(
                                                         <tr scope="col" key={index2}>
                                                             <th scope="row">{index2+1}</th>
-                                                            <td>{ele[0]}</td>
-                                                            <td>{ele[1]}</td>
-                                                            <td>{ele[2]}</td>
-                                                            <td>{ele2[4]}</td>
-                                                            <td>@{ele2[1]}</td>
-                                                            <td>{ele2[2]}</td>
-                                                            <td>{ele2[3]}</td>
-                                                            <td>{ele2[5]}</td>                                                            
-                                                            <td>{ele2[6]}</td>
-                                                            <td>{ele2[7]}</td>
+                                                            <td>{ele.name}</td>
+                                                            <td>{ele.country}</td>
+                                                            <td>{ele.age}</td>                                 
+
+                                                            <td>{ele2.p1score}</td>
+                                                            {ele2.player1==this.props.location.state.data?<td>{ele2.player2}</td>:<td>@{ele2.player1}</td>}
+                                                            <td>{ele2.court}</td>
+                                                            <td>{ele2.turn}</td>
+                                                            
+                                                            <td>{ele2.p2score}</td>
+                                                            <td>{ele2.win}</td>
                                                         </tr>    
                                                         );
                                                 }

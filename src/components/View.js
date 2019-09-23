@@ -17,14 +17,14 @@ export default class Search extends React.Component
         axios.get('http://localhost:5000/played')
         .then(response =>
             this.setState({
-            alldata:[...this.state.alldata,...response.data.data]
+            alldata:[...this.state.alldata,...response.data]
         }))
         .catch(err => console.log(err));
 
         axios.get('http://localhost:5000/show')
         .then(response =>
             this.setState({
-            alldata2:[...this.state.alldata2,...response.data.data]
+            alldata2:[...this.state.alldata2,...response.data]
         }))
         .catch(err => console.log(err));
     }
@@ -53,13 +53,13 @@ export default class Search extends React.Component
                                     return(
                                     <tr key={index}>
                                         <th scope="row">{index+1}</th>
-                                        <td>{ele[0]}</td>
-                                        <td>{ele[1]}</td>
-                                        <td>{ele[2]}</td>
-                                        <td>{ele[3]}</td>
-                                        <td>{ele[4]}</td>
-                                        <td>{ele[5]}</td>
-                                        <td>{ele[6]}</td>
+                                        <td>{ele.player1}</td>
+                                        <td>{ele.player2}</td>
+                                        <td>{ele.court}</td>
+                                        <td>{ele.turn}</td>
+                                        <td>{ele.p1score}</td>
+                                        <td>{ele.p2score}</td>
+                                        <td>{ele.win}</td>
                                     </tr>
                                     );                                        
                                 })
